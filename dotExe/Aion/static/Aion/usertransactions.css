@@ -44,6 +44,15 @@ body {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    width: 150px;
+}
+
+.transbox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
 
 
 

@@ -35,13 +35,15 @@
             {% endif %}
         </div>
     </div>
-    {% for transaction in transactions %}
-    <div class="userbox">
-        <h1>{{transaction.product_id.product_name}}</h1>
-        <span>Date: {{transaction.transaction_date}}</span>
-        <span>Quantity: {{transaction.transaction_quantity}}</span>
-        <span>Total: Php{{transaction.transaction_order_total}}</span>
+    <div class="transbox">
+        {% for transaction in transactions %}
+        <div class="userbox">
+            <h1>{{transaction.product_id.product_name}}</h1>
+            <span>Date: {{transaction.transaction_date}}</span>
+            <span>Quantity: {{transaction.transaction_quantity}}</span>
+            <span>Total: Php{{transaction.transaction_order_total}}</span>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </body>
 </html>
