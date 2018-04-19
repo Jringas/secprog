@@ -10,6 +10,14 @@ import dateutil.parser
 
 lockout = 0
 
+def error_404(request):
+        data = {}
+        return render(request,'Aion/404.html', data)
+
+def error_500(request):
+        data = {}
+        return render(request,'Aion/500.html', data)
+
 def managerTransactionPageOne(request):
     user = get_object_or_404(User, pk = request.session['user'])
     transaction_list = Transaction.objects.all()
