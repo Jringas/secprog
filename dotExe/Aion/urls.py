@@ -48,5 +48,6 @@ urlpatterns = [
     url(r'managerTransactionPageOne$' ,views.managerTransactionPageOne ,name='managerTransactionPageOne'),
     url(r'managerTransactionPageTwo$' ,views.managerTransactionPageTwo ,name='managerTransactionPageTwo'),
     url(r'managerTransactionPageThree$' ,views.managerTransactionPageThree ,name='managerTransactionPageThree'),
-    url(r'^$',views.homeBase ,name='homeBase'),
+    url(r'home$',views.homeBase ,name='homeBase'),
+    url(r'^$',views.loginPage ,name='loginPage'),
 ]
