@@ -19,6 +19,7 @@ app_name = 'Aion'
 
 urlpatterns = [
     url(r'adminAddUser$' ,views.adminAddUser ,name='adminAddUser'),
+    url(r'logOut$' ,views.logOut ,name='logOut'),
     url(r'accountingManagerFinancialDetails$' ,views.accountingManagerFinancialDetails ,name='accountingManagerFinancialDetails'),
     url(r'productManagerWatchUpdate/(?P<watchNo>[0-9]+)$' ,views.productManagerWatchUpdate ,name='productManagerWatchUpdate'),
     url(r'productManagerAddWatch$' ,views.productManagerAddWatch ,name='productManagerAddWatch'),

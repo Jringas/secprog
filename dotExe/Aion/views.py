@@ -10,6 +10,20 @@ import dateutil.parser
 
 lockout = 0
 
+def logOut(request):
+    watch_list = Product.objects.order_by('-id')
+    context = {
+		'watchList': watch_list,
+	}
+
+    if 'timeout' in request.session:
+        context['timeout'] = True
+        del request.session['timeout']
+    request.session.flush()
+    request.session['user'] = -1
+
+    return render(request, 'Aion/homepage.html',context)
+
 def error_404(request):
         data = {}
         return render(request,'Aion/404.html', data)
