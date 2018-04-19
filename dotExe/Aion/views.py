@@ -7,9 +7,17 @@ from passlib.hash import pbkdf2_sha256
 from datetime import datetime, timedelta
 import dateutil.parser
 import re
+import logging
 # Create your views here.
 
-lockout = 0
+
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:%(message)s')
+file_handler = logging.FileHandler('dotExe.log')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 def password_check(password):
     """
@@ -405,7 +413,15 @@ def homeBase(request):
     if 'timeout' in request.session:
         context['timeout'] = True
         del request.session['timeout']
+        user = get_object_or_404(User, pk=request.session['user'])
+        logger.info("USER:{}-SESSION-TIMEDOUT".format(user.user_username))
+    
     request.session.flush()
+
+    if 'user' in request.session:
+        if request.session['user'] > -1:
+            user = get_object_or_404(User, pk=request.session['user'])
+            logger.info("USER:{}-LOGOUT-SUCCESS".format(user.user_username))
     
     request.session['user'] = -1
 
@@ -470,7 +486,10 @@ def signUp(request):
         user_change = userEditForm.save(commit=False)
         user_change.user_username = userEditForm.cleaned_data['user_username']
         user_change.user_password = pbkdf2_sha256.encrypt(user_change.user_password, rounds=12000, salt_size=32)
+        logger.info("ACCOUNT:{}-CREATION-SUCCESS".format(user_change.user_username))
         user_change.save()
+    else:
+        logger.info("ACCOUNT-CREATION-FAILED")
 
     user = User.objects.order_by('-id')[0]
     adding_user_info = User_Info(user_id = user, billing_house_number = request.POST['UserHouseNumber'], billing_street = request.POST['UserStreet'], billing_subdivision =request.POST['UserSubdivision'], billing_city =request.POST['UserCity'], billing_postal_code =request.POST['UserPostalCode'], billing_country =request.POST['UserCountry'], shipping_house_number =request.POST['UserSHouseNumber'], shipping_street =request.POST['UserSStreet'], shipping_subdivision =request.POST['UserSSubdivision'], shipping_city =request.POST['UserSCity'], shipping_postal_code =request.POST['UserSPostalCode'], shipping_country =request.POST['UserSCountry']) 
@@ -509,13 +528,16 @@ def signIn(request):
                     request.session["user"] = x.id
 
                     request.session['last_touch'] = datetime.now().isoformat()
+                    logger.info("USER:{}-LOGIN-SUCCESS".format(x.user_username))
                 else:
                     user = get_object_or_404(User, pk=x.id)
                     user.user_pass_tries += 1
                     user.save()
+                    logger.info("USER:{}-LOGIN-FAILED".format(user.user_username))
                     if user.user_pass_tries == 5:
                         user.user_is_active = False
                         user.save()
+                        logger.info("USER:{}-ACCOUNT-DISABLED".format(user.user_username))
                         
                         
             else:
@@ -523,6 +545,7 @@ def signIn(request):
                 context = {
                     'error': error
                 }
+                logger.info("ACCESS-DENIED-DISABLED-ACCOUNT")
                 return render(request, 'Aion/login.html', context)
 
 
