@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Time Watch</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'Aion/shoppingcart.css' %}">
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-contents">
+            {% if request.session.user > 0 %}
+            <a href="{% url 'Aion:homePage' %}" id="home">Aion Watch</a>
+            {% else %}
+            <a href="{% url 'Aion:homeBase' %}" id="home">Aion Watch</a>
+            {% endif %}
+        </div>
+        <div class="navbar-contents">
+            {% if user.user_privilege == '0' %}
+            <a href="{% url 'Aion:addUserPage' %}">Add User</a>
+            <a href="{% url 'Aion:listManagersPage'%}">List of Managers</a>
+            {% elif user.user_privilege == '1' %}
+            <a href="{% url 'Aion:addWatchPage' %}">Add Watches</a>
+            <a href="{% url 'Aion:editWatchPage' %}">List Watches</a>
+            {% elif user.user_privilege == '2' %}
+            <a href="{% url 'Aion:managerTransactionPageOne' %}">View Transactions</a>
+            {% endif %}
+            <a href="{% url 'Aion:myProfile' %}">Profile</a>
+            <a href="{% url 'Aion:loginPage' %}">Logout</a>
+        </div>
+    </div>
+    <form action="{% url 'Aion:transactionProcessed' item.pk %}" method="post">
+    {% csrf_token %}
+    <div class="box">
+        <div class="main-gallery">
+            <div class="shopping-cart">
+                <!-- Title -->
+                <div class="title">
+                    SUMMARY OF TRANSACTION
+                </div>
+
+                <!-- Product #1 -->
+                <div class="item">
+                    <div class="image">
+                        <img src="{{item.product_thumbnail.url}}" width="60px"/>
+                    </div>
+                    <div class="description">
+                        <span>Brand Name {{item.product_name}}</span>
+                        <span>Price: Php{{item.product_price}}</span>
+                        {% if item.product_type == '0' %}
+                        <span>Type: Analog Watch</span>
+                        {% elif item.product_type == '1' %}
+                        <span>Type: Digital Watch</span>
+                        {% elif item.product_type == '2' %}
+                        <span>Type: Smart Watch</span>
+                        {% endif %}
+                    </div>
+                    <div class="quantity">
+                        <span >Quantity: {{quantity}}</span>
+                    </div>
+                    <div class="total-price">Php{{cost}}</div>
+                </div>
+            </div>
+        </div>
+        <div class="total">
+            Total Price: Php {{ cost }}
+        </div>
+        <div>
+            <button class="checkout">Checkout</button>
+        </div>
+        <input type="hidden" name="TransactionQuantity" value="{{quantity}}">
+    </div>
+    </form>   
+</body>
+</html>

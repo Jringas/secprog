@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Aion Watch</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'Aion/signup.css' %}">
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-contents">
+            <a href="{% url 'Aion:homeBase' %}" id="home">Aion Watch</a>
+        </div>
+        <div class="navbar-contents">
+            <a href="{% url 'Aion:loginPage' %}">Log In</a>
+        </div>
+    </div>
+    
+    <div class="main">
+        <div class="loginbox">
+            <h1>Sign Up</h1>
+            <form action="{% url 'Aion:signUp' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="inputbox">    
+            {% for field in form %}
+            {{ field.label_tag }}
+            {{ field }}
+            {% endfor %}
+                <div class="row">
+                    <div class="col-50">
+                        <h3>Billing Address</h3>
+                        <input type="text" value="" placeholder="House No." id="house" name="UserHouseNumber"/>
+                        <input type="text" value="" placeholder="Street" id="street" name="UserStreet"/>
+                        <input type="text" value="" placeholder="Subdivision" id="subd" name="UserSubdivision"/>
+                        <input type="text" value="" placeholder="City" id="city" name="UserCity"/>
+                        <input type="text" value="" placeholder="Country" id="country" name="UserCountry"/>
+                        <input type="number" min="0" value="0"  placeholder="Postal Code" id="postal" name="UserPostalCode"/>
+                    </div>                    
+                </div>
+                <div class="row">
+                    <div class="col-50">
+                        <h3>Shipping Address</h3>
+                        <input type="text" value="" placeholder="House No." id="house" name="UserSHouseNumber"/>
+                        <input type="text" value="" placeholder="Street" id="street" name="UserSStreet"/>
+                        <input type="text" value="" placeholder="Subdivision" id="subd" name="UserSSubdivision"/>
+                        <input type="text" value="" placeholder="City" id="city" name="UserSCity"/>
+                        <input type="text" value="" placeholder="Country" id="country" name="UserSCountry"/>
+                        <input type="number" min="0" value="0"  placeholder="Postal Code" id="postal" name="UserSPostalCode"/>
+                    </div>                    
+                </div>
+                <button>Submit</button>    
+            </div>
+            </form>
+        </div>
+    </div>
+    
+
+</body>
+</html>

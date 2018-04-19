@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Time Watch</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'Aion/viewtransact.css' %}">
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-contents">
+             {% if request.session.user > 0 %}
+            <a href="{% url 'Aion:homePage' %}" id="home">Aion Watch</a>
+            {% else %}
+            <a href="{% url 'Aion:homeBase' %}" id="home">Aion Watch</a>
+            {% endif %}
+        </div>
+        <div class="navbar-contents">
+            {% if user.user_privilege == '0' %}
+            <a href="{% url 'Aion:addUserPage' %}">Add User</a>
+            <a href="{% url 'Aion:listManagersPage'%}">List of Managers</a>
+            {% elif user.user_privilege == '1' %}
+            <a href="{% url 'Aion:addWatchPage' %}">Add Watches</a>
+            <a href="{% url 'Aion:editWatchPage' %}">List Watches</a>
+            {% elif user.user_privilege == '2' %}
+            <a href="{% url 'Aion:managerTransactionPageOne' %}">View Transactions</a>
+            {% endif %}
+            <a href="{% url 'Aion:myProfile' %}">Profile</a>
+            <a href="{% url 'Aion:loginPage' %}">Logout</a>
+        </div>
+    </div>
+    
+    <div class="toptbox">
+        <h1>Transactions</h1>
+        <div class="buttons">
+            <a href="{% url 'Aion:managerTransactionPageOne' %}">Total Sales</a>
+            <a href="{% url 'Aion:managerTransactionPageTwo' %}">Sales By Type</a>
+            <a href="{% url 'Aion:managerTransactionPageThree' %}">Sales By Product</a>
+        </div>
+    </div>
+    {% if filter == 1 %}
+    <div class="transactionbox">    
+        <div class="tablebox">
+            <table width="100%">
+                <tr>
+                    <th>Product Name</th>
+                    <th>Date</th>
+                    <th>Sales</th>
+                </tr>
+                {% for trans in transaction %}
+                <tr>
+                    <td>{{ trans.product_id.product_name }}</td>
+                    <td>{{ trans.transaction_date }}</td>
+                    <td>Php{{trans.product_id.product_price}} X {{trans.transaction_quantity}} = Php{{ trans.transaction_order_total }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="totalbox">
+            <h2>Total Sales: Php{{total}}</h2>
+        </div>
+    </div>
+    {% elif filter == 2 %}
+    <div class="transactionbox">    
+        <div class="tablebox">
+            <table width="100%">
+                <tr>
+                    <th>Product Name [ ANALOG WATCH ]</th>
+                    <th>Date</th>
+                    <th>Sales</th>
+                </tr>
+                {% for trans in analog %}
+                <tr>
+                    <td>{{ trans.product_id.product_name }}</td>
+                    <td>{{ trans.transaction_date }}</td>
+                    <td>Php{{trans.product_id.product_price}} X {{trans.transaction_quantity}} = Php{{ trans.transaction_order_total }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="totalbox">
+            <h2>Total Sales: Php{{total1}}</h2>
+        </div>
+    </div>
+    <div class="transactionbox">    
+        <div class="tablebox">
+            <table width="100%">
+                <tr>
+                    <th>Product Name [ DIGITAL WATCH ]</th>
+                    <th>Date</th>
+                    <th>Sales</th>
+                </tr>
+                {% for trans in digital %}
+                <tr>
+                    <td>{{ trans.product_id.product_name }}</td>
+                    <td>{{ trans.transaction_date }}</td>
+                    <td>Php{{trans.product_id.product_price}} X {{trans.transaction_quantity}} = Php{{ trans.transaction_order_total }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="totalbox">
+            <h2>Total Sales: Php{{total2}}</h2>
+        </div>
+    </div>
+    <div class="transactionbox">    
+        <div class="tablebox">
+            <table width="100%">
+                <tr>
+                    <th>Product Name [ SMART WATCH ]</th>
+                    <th>Date</th>
+                    <th>Sales</th>
+                </tr>
+                {% for trans in smart %}
+                <tr>
+                    <td>{{ trans.product_id.product_name }}</td>
+                    <td>{{ trans.transaction_date }}</td>
+                    <td>Php{{trans.product_id.product_price}} X {{trans.transaction_quantity}} = Php{{ trans.transaction_order_total }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="totalbox">
+            <h2>Total Sales: Php{{total3}}</h2>
+        </div>
+    </div>
+    {% elif filter == 3 %}
+        {% for item in product %}
+        <div class="transactionbox">    
+            <div class="tablebox">
+                <table width="100%">
+                    <tr>
+                        <th>Product Name [ {{item.product_name}} ]</th>
+                        <th>Date</th>
+                        <th>Sales</th>
+                    </tr>
+                    {% for trans2 in transaction %}
+                        {% if trans2.product_id.product_name == item.product_name %}
+                            <tr>
+                                <td>{{ trans2.product_id.product_name }}</td>
+                                <td>{{ trans2.transaction_date }}</td>
+                                <td>Php{{trans2.product_id.product_price}} X {{trans2.transaction_quantity}} = Php{{ trans2.transaction_order_total }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+            {% for totality in totalPerProduct %}
+                {% if totality.product_id == item %}
+                <div class="totalbox">
+                    <h2>Total Sales: Php{{totality.transaction_total}} </h2>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endfor %}
+        {% for item in noTransactions%}
+        <div class="transactionbox">    
+                <div class="tablebox">
+                    <table width="100%">
+                        <tr>
+                            <th>Product Name [ {{item.product_name}} ]</th>
+                            <th>Date</th>
+                            <th>Sales</th>
+                        </tr>
+                        <tr>
+                            <td>No Transactions Available</td>
+                            <td>No Transactions Available</td>
+                            <td>No Transactions Available</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="totalbox">
+                    <h2>Total Sales: No Transactions Available</h2>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Time Watch</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'Aion/watchdetails.css' %}">
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-contents">
+            {% if request.session.user > 0 %}
+            <a href="{% url 'Aion:homePage' %}" id="home">Aion Watch</a>
+            {% else %}
+            <a href="{% url 'Aion:homeBase' %}" id="home">Aion Watch</a>
+            {% endif %}
+        </div>
+        <div class="navbar-contents">
+           {% if request.session.user > 0 %}
+                {% if user.user_privilege == '0' %}
+                <a href="{% url 'Aion:addUserPage' %}">Add User</a>
+                <a href="{% url 'Aion:listManagersPage'%}">List of Managers</a>
+                {% elif user.user_privilege == '1' %}
+                <a href="{% url 'Aion:addWatchPage' %}">Add Watches</a>
+                <a href="{% url 'Aion:editWatchPage' %}">List Watches</a>
+                {% elif user.user_privilege == '2' %}
+                <a href="{% url 'Aion:managerTransactionPageOne' %}">View Transactions</a>
+                {% endif %}
+            <a href="{% url 'Aion:myProfile' %}">Profile</a>
+            <a href="{% url 'Aion:homeBase' %}">Logout</a>
+            {% else %}
+            <a href="{% url 'Aion:loginPage' %}">Log In</a>
+            <a href="{% url 'Aion:signUpPage' %}">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="userbox">
+       
+        <div class="details">
+            <img class="photo" src="{{ item.product_thumbnail.url }}">
+            <div class="user-details">
+                <h1>{{ item.product_name }}</h1>
+                <div class="buy">
+                     {% if request.session.user > 0 %}
+                        {% if user.user_privilege == '3' %}
+                            {% if item.product_quantity > 0 %}
+                            <form action="{% url 'Aion:buyWatch' item.pk %}" method="post">
+                                {% csrf_token %}
+                                 <input type="number" Placeholder="Quantity" name="ProductQuantity" min="1" max="{{ item.product_quantity}}" value="1"\>
+                                <button>Buy</button>
+                            </form>
+                            {% else %}
+                            <h1> Product Out of Stock</h1>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                     {% if good == 1 %}
+                        <form action="{% url 'Aion:giveReviewPage' item.pk %}" method="post">
+                        {% csrf_token %}    
+                        <button>Give Review</button>
+                        </form>    
+                    {% endif %}
+                </div>
+                <p>Price: Php{{ item.product_price }}</p>
+                {% if item.product_type == '0' %}
+                <p>Type: Analog Watch</p>
+                {% elif item.product_type == '1' %}
+                <p>Type: Digital Watch</p>
+                {% elif item.product_type == '2' %}
+                <p>Type: Smart Watch</p>
+                {% endif %}
+                <p>Rating: {{item.product_rating}}</p>
+            </div>
+            <div class="user-details">
+                <h2>Reviews</h2>
+            </div>
+                {% if review %}
+                    {% for review in review %}
+                    <div class="user-details">
+                    <p>Author: {{ review.product_user_review.user_last_name }}, {{ review.product_user_review.user_first_name }} {{ review.product_user_review.user_middle_initial }}</p>
+                    <p>{{review.product_comment}}</p>
+                    </div>    
+                    {% endfor %}
+                {% else %}
+                    <h2>NO REVIEWS YET</h2>
+                {% endif %}
+        </div>
+    </div>
+    
+</body>
+</html>

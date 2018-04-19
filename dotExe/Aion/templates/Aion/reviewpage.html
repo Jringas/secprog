@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Aion Watch</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'Aion/reviewpage.css' %}">
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-contents">
+            {% if request.session.user > 0 %}
+            <a href="{% url 'Aion:homePage' %}" id="home">Aion Watch</a>
+            {% else %}
+            <a href="{% url 'Aion:homeBase' %}" id="home">Aion Watch</a>
+            {% endif %}
+        </div>
+        <div class="navbar-contents">
+            {% if user.user_privilege == '0' %}
+            <a href="{% url 'Aion:addUserPage' %}">Add User</a>
+            <a href="{% url 'Aion:listManagersPage'%}">List of Managers</a>
+            {% elif user.user_privilege == '1' %}
+            <a href="{% url 'Aion:addWatchPage' %}">Add Watches</a>
+            <a href="{% url 'Aion:editWatchPage' %}">List Watches</a>
+            {% elif user.user_privilege == '2' %}
+            <a href="{% url 'Aion:managerTransactionPageOne' %}">View Transactions</a>
+            {% endif %}
+            <a href="{% url 'Aion:myProfile' %}">Profile</a>
+            <a href="{% url 'Aion:loginPage' %}">Logout</a>
+        </div>
+    </div>
+    
+    <div class="main">
+        <div class="review">
+            <div class="form-container">
+                <h1>Review The Item</h1>
+                <form action="{% url 'Aion:finishReviewPage' item.pk %}" method="post">
+                    {% csrf_token %}
+                    <div class="revbox">
+                        <textarea placeholder="Input review here..." name="UserReview" cols="50" rows="5"></textarea>
+                        <button class="button">Submit</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

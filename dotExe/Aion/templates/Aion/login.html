@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'Aion/login.css' %}">
+    <meta charset="UTF-8">
+    <title>Aion Watch</title>
+    
+</head>
+<body>
+    {% if error %}
+        <script type="text/javascript">alert("Your account has been disabled due to reaching the maximum amount of tries.")</script>
+    {% endif %}
+    <div class="navbar">
+        <div class="navbar-contents">
+            <a href="{% url 'Aion:homeBase' %}" id="home">Aion Watch</a>
+        </div>
+        <div class="navbar-contents">
+            <a href="{% url 'Aion:signUpPage' %}">Sign Up</a>
+        </div>
+    </div>
+    
+    <div class="main">
+        <div class="loginbox">
+            <h1>Login</h1>
+            <form action="{% url 'Aion:signIn' %}" method="post">
+            {% csrf_token %}    
+                <div class="inputbox">    
+                    <input type="text" placeholder="Username" id="username" name="SigningUserName"/>
+                    <input type="password" placeholder="Password" id="password" name="SigningUserPassword"/>
+                    <button>Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+</body>
+</html>

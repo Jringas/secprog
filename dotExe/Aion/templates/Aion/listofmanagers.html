@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Time Watch</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'Aion/listmanagers.css' %}">
+</head>
+<body>
+
+   <div class="navbar">
+        <div class="navbar-contents">
+            {% if request.session.user > 0 %}
+            <a href="{% url 'Aion:homePage' %}" id="home">Aion Watch</a>
+            {% else %}
+            <a href="{% url 'Aion:homeBase' %}" id="home">Aion Watch</a>
+            {% endif %}
+        </div>
+        <div class="navbar-contents">
+            {% if user.user_privilege == '0' %}
+            <a href="{% url 'Aion:addUserPage' %}">Add User</a>
+            <a href="{% url 'Aion:listManagersPage'%}">List of Managers</a>
+            {% elif user.user_privilege == '1' %}
+            <a href="{% url 'Aion:addWatchPage' %}">Add Watches</a>
+            <a href="{% url 'Aion:editWatchPage' %}">List Watches</a>
+            {% elif user.user_privilege == '2' %}
+            <a href="{% url 'Aion:managerTransactionPageOne' %}">View Transactions</a>
+            {% endif %}
+            <a href="{% url 'Aion:myProfile' %}">Profile</a>
+            <a href="{% url 'Aion:loginPage' %}">Logout</a>
+        </div>
+    </div>
+
+    <div class="main-gallery">
+        {% for person in productManagers %}
+        <div class="item">
+            <a href="#">
+                <img src="{{person.user_thumbnail.url}}" width="200" height="250">
+            </a>
+            <div class="details">
+                <a href="#"><h2>{{person.user_last_name}}, {{person.user_first_name}} {{person.user_middle_initial}}</h2></a>
+                <p>Product Manager</p>
+                <p>{{person.user_username}}</p>
+                <p>{{person.user_email}}</p>
+            </div>
+        </div>
+        {% endfor %}
+        {% for person in accountingManagers %}
+        <div class="item">
+            <a href="#">
+                <img src="{{person.user_thumbnail.url}}" width="200" height="250">
+            </a>
+            <div class="details">
+                <a href="#"><h2>{{person.user_last_name}}, {{person.user_first_name}} {{person.user_middle_initial}}</h2></a>
+                <p>Accounting Manager</p>
+                <p>{{person.user_username}}</p>
+                <p>{{person.user_email}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
