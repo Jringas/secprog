@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^!+-5jc9e28@n2r--xd!a@$r2v5oj@0ax&babskymiz!h3sm%_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -42,18 +42,31 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+#    'session_security',
+    'sslserver',
+    'djangosecure',
 ]
 
 MIDDLEWARE = [
+#    'djangosecure.middleware.SecurityMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+#    'session_security.middleware.SessionSecurityMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'Aion.middleware.LoggedInMiddleware',
+    
 ]
+
+#SESSION_SECURITY_WARN_AFTER = 540
+#SESSION_SECURITY_EXPIRE_AFTER = 600
+#SESSION_SECURITY_INSECURE = True
+#SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+#SESSION_COOKIE_DOMAIN = '.domain.com'
+SECURE_SSL_REDIRECT = False
 
 ROOT_URLCONF = 'dotExe.urls'
 

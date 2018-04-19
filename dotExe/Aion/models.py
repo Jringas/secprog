@@ -35,7 +35,7 @@ class User(models.Model):
     user_last_name = models.CharField(max_length=200)
     user_middle_initial = models.CharField(max_length=3)
     user_email = models.EmailField(blank=False, null=True, max_length=200, validators=[EmailValidator(message='Invalid Email!')])
-    user_thumbnail = models.ImageField(blank=True, null=True, upload_to='Product/')
+#    user_thumbnail = models.ImageField(blank=True, null=True, upload_to='Product/')
     user_pass_tries = models.PositiveIntegerField(blank=True, null=True, default=0)
     user_is_active = models.BooleanField(default=True)
     
@@ -70,7 +70,7 @@ class Product(models.Model):
     product_quantity = models.IntegerField(default=0)
     product_price = models.FloatField(default=0)
     product_rating = models.CharField(max_length=16, choices=watch_rating, default='3')
-    product_thumbnail = models.ImageField(blank=True, null=True, upload_to='Product/')
+#    product_thumbnail = models.ImageField(blank=True, null=True, upload_to='Product/')
     product_type = models.CharField(max_length=16, choices=watch_type, default='0')
     product_bought = models.IntegerField(default=0)
     
