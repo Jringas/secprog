@@ -6,9 +6,42 @@ from Aion.forms import ProductImageForm, AdminUserImageForm, EditProfileForm
 from passlib.hash import pbkdf2_sha256
 from datetime import datetime, timedelta
 import dateutil.parser
+import re
 # Create your views here.
 
 lockout = 0
+
+def password_check(password):
+    """
+    Verify the strength of 'password'
+    Returns a dict indicating the wrong criteria
+    A password is considered strong if:
+        8 characters length or more
+        1 digit or more
+        1 symbol or more
+        1 uppercase letter or more
+        1 lowercase letter or more
+    """
+
+    # calculating the length
+    length_error = len(password) < 8
+
+    # searching for digits
+    digit_error = re.search(r"\d", password) is None
+
+    # searching for uppercase
+    uppercase_error = re.search(r"[A-Z]", password) is None
+
+    # searching for lowercase
+    lowercase_error = re.search(r"[a-z]", password) is None
+
+    # searching for symbols
+    ssymbol_error = re.search(r"\W", password) is None
+
+    # overall result
+    password_ok = not ( length_error or digit_error or uppercase_error or lowercase_error or symbol_error )
+
+    return password_ok
 
 def logOut(request):
     watch_list = Product.objects.order_by('-id')
@@ -432,7 +465,7 @@ def watchListFilter(request, itemType):
     
 def signUp(request):
     userEditForm = EditProfileForm(request.POST, request.FILES)
-
+    error = 0
     if userEditForm.is_valid():
         user_change = userEditForm.save(commit=False)
         user_change.user_username = userEditForm.cleaned_data['user_username']
@@ -442,10 +475,25 @@ def signUp(request):
     user = User.objects.order_by('-id')[0]
     adding_user_info = User_Info(user_id = user, billing_house_number = request.POST['UserHouseNumber'], billing_street = request.POST['UserStreet'], billing_subdivision =request.POST['UserSubdivision'], billing_city =request.POST['UserCity'], billing_postal_code =request.POST['UserPostalCode'], billing_country =request.POST['UserCountry'], shipping_house_number =request.POST['UserSHouseNumber'], shipping_street =request.POST['UserSStreet'], shipping_subdivision =request.POST['UserSSubdivision'], shipping_city =request.POST['UserSCity'], shipping_postal_code =request.POST['UserSPostalCode'], shipping_country =request.POST['UserSCountry']) 
     adding_user_info.save()
-    context = {
-        'user': user,
-	}
-    return render(request, 'Aion/login.html', context)
+    NewUser = User.objects.latest('id')
+    adding_user_info = User_Info.objects.latest('id')
+    password_ok = password_check(NewUser.user_username)
+    if password_ok == 1:
+        error = 0
+        context = {
+            'error':error,
+        }
+        return render(request, 'Aion/login.html', context)
+    elif password_ok == 0:
+        error = 1
+        form = EditProfileForm(request.POST , request.FILES)
+        context = {
+            'error':error,
+            'form':form
+        }
+        NewUser.delete()
+        adding_user_info.delete()
+        return render(request, 'Aion/signup.html', context)
 
 def signIn(request):
     watch_list = Product.objects.order_by('-id')

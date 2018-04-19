@@ -25,6 +25,11 @@
             <div class="inputbox">    
             {% for field in form %}
             {{ field.label_tag }}
+                {% if field.label_tag == "User password:" %}
+                    {% if error %}
+                        <p> HELLOO!!!! </p>
+                    {% endif %}
+                {% endif %}
             {{ field }}
             {% endfor %}
                 <div class="row">
