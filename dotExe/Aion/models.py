@@ -98,4 +98,13 @@ class Transaction_Extension(models.Model):
     
     def __str__(self):
         return self.product_id.product_name
+
+class Common_Passwords(models.Model):
+    password = models.CharField(max_length=300, blank=True, null=True)
+    def __str__(self):
+        return self.password
     
+class Common_Usernames(models.Model):
+    usernames = models.CharField(max_length=300, blank=True, null=True)
+    def __str__(self):
+        return self.usernames

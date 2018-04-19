@@ -3,7 +3,7 @@
     <head>
         {% load static %}
         <meta charset="UTF-8">
-        <title>Error 500</title>
+        <title>Registered</title>
         <link rel="stylesheet" type="text/css" href="{% static 'Aion/homepage.css' %}">
         
     </head>
@@ -274,10 +274,10 @@ body{
             <div class="cloud x5"></div>
         </div>
         <div class='c'>
-            <div class='_404'>500</div>
+            <div class='_404'>SUCCESSFULLY!!!</div>
             <hr>
-            <div class='_1'>INTERNAL</div>
-            <div class='_2'>SERVER ERROR</div>
+            <div class='_1'>REGISTERED</div>
+            <div class='_2'>WELCOME TO AION</div>
             {% if request.session.user > 0 %}
             <a href="{% url 'Aion:homePage' %}" class="btn" >BACK TO AION</a>
             {% else %}

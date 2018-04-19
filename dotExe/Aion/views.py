@@ -1,6 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from django.http import HttpResponse,HttpResponseRedirect
-from .models import User, User_Info, Product, Product_Review, Transaction, Transaction_Extension
+from .models import User, User_Info, Product, Product_Review, Transaction, Transaction_Extension, Common_Passwords, Common_Usernames
 from django.core.files.storage import FileSystemStorage
 from Aion.forms import ProductImageForm, AdminUserImageForm, EditProfileForm
 from passlib.hash import pbkdf2_sha256
@@ -44,7 +44,7 @@ def password_check(password):
     lowercase_error = re.search(r"[a-z]", password) is None
 
     # searching for symbols
-    ssymbol_error = re.search(r"\W", password) is None
+    symbol_error = re.search(r"\W", password) is None
 
     # overall result
     password_ok = not ( length_error or digit_error or uppercase_error or lowercase_error or symbol_error )
@@ -485,6 +485,45 @@ def signUp(request):
     if userEditForm.is_valid():
         user_change = userEditForm.save(commit=False)
         user_change.user_username = userEditForm.cleaned_data['user_username']
+        userList = Common_Usernames.objects.all()
+        presentUserList = User.objects.all()
+        for x in userList:
+            if x.usernames == user_change.user_username:
+                error = 3
+                form = EditProfileForm(request.POST , request.FILES)
+                context = {
+                    'error':error,
+                    'form':form
+                }
+                return render(request, 'Aion/signup.html', context)
+        for x in presentUserList:
+            if x.user_username == user_change.user_username:
+                error = 4
+                form = EditProfileForm(request.POST , request.FILES)
+                context = {
+                    'error':error,
+                    'form':form
+                }
+                return render(request, 'Aion/signup.html', context)
+        if password_check(user_change.user_password) == False:
+            error = 1
+            form = EditProfileForm(request.POST , request.FILES)
+            context = {
+                'error':error,
+                'form':form
+            }
+            return render(request, 'Aion/signup.html', context)
+        elif password_check(user_change.user_password) == True:
+            passwordList = Common_Passwords.objects.all()
+            for x in passwordList:
+                if user_change.user_password == x.password: 
+                    error = 2
+                    form = EditProfileForm(request.POST , request.FILES)
+                    context = {
+                        'error':error,
+                        'form':form
+                    }
+                    return render(request, 'Aion/signup.html', context)
         user_change.user_password = pbkdf2_sha256.encrypt(user_change.user_password, rounds=12000, salt_size=32)
         logger.info("ACCOUNT:{}-CREATION-SUCCESS".format(user_change.user_username))
         user_change.save()
@@ -494,25 +533,7 @@ def signUp(request):
     user = User.objects.order_by('-id')[0]
     adding_user_info = User_Info(user_id = user, billing_house_number = request.POST['UserHouseNumber'], billing_street = request.POST['UserStreet'], billing_subdivision =request.POST['UserSubdivision'], billing_city =request.POST['UserCity'], billing_postal_code =request.POST['UserPostalCode'], billing_country =request.POST['UserCountry'], shipping_house_number =request.POST['UserSHouseNumber'], shipping_street =request.POST['UserSStreet'], shipping_subdivision =request.POST['UserSSubdivision'], shipping_city =request.POST['UserSCity'], shipping_postal_code =request.POST['UserSPostalCode'], shipping_country =request.POST['UserSCountry']) 
     adding_user_info.save()
-    NewUser = User.objects.latest('id')
-    adding_user_info = User_Info.objects.latest('id')
-    password_ok = password_check(NewUser.user_username)
-    if password_ok == 1:
-        error = 0
-        context = {
-            'error':error,
-        }
-        return render(request, 'Aion/login.html', context)
-    elif password_ok == 0:
-        error = 1
-        form = EditProfileForm(request.POST , request.FILES)
-        context = {
-            'error':error,
-            'form':form
-        }
-        NewUser.delete()
-        adding_user_info.delete()
-        return render(request, 'Aion/signup.html', context)
+    return render(request, 'Aion/successful.html')
 
 def signIn(request):
     watch_list = Product.objects.order_by('-id')

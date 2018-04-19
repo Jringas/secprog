@@ -20,16 +20,20 @@
     <div class="main">
         <div class="loginbox">
             <h1>Sign Up</h1>
+            {% if error == 1 %}
+                <script type="text/javascript">alert(" Please Follow The Password Format ")</script>
+            {% elif error == 2 %}
+                <script type="text/javascript">alert(" Avoid Using Common Passwords ")</script>
+            {% elif error == 3 %}
+                <script type="text/javascript">alert(" Avoid Using Common Usernames ")</script>
+            {% elif error == 4 %}
+                <script type="text/javascript">alert(" Username Already Taken ")</script>
+            {% endif %}
             <form action="{% url 'Aion:signUp' %}" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="inputbox">    
             {% for field in form %}
             {{ field.label_tag }}
-                {% if field.label_tag == "User password:" %}
-                    {% if error %}
-                        <p> HELLOO!!!! </p>
-                    {% endif %}
-                {% endif %}
             {{ field }}
             {% endfor %}
                 <div class="row">

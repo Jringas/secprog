@@ -13,3 +13,7 @@ from .models import Transaction
 admin.site.register(Transaction)
 from .models import Transaction_Extension
 admin.site.register(Transaction_Extension)
+from .models import Common_Passwords
+admin.site.register(Common_Passwords)
+from .models import Common_Usernames
+admin.site.register(Common_Usernames)
